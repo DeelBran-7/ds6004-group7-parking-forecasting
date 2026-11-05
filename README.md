@@ -14,6 +14,10 @@ forecasts the probability of zero free spaces and the probability of fewer
 than three free spaces. It includes XGBoost, CatBoost, two comparators,
 chronological probability calibration, and matched replay on the pilot.
 
+**Part B: Recommendation.** The [Chinatown replay](RECOMMENDATION.md)
+implements the proposal's A/B/C0/C ranking rules and two direct risk variants.
+See the [matched test summary](examples/chinatown_recommendation/recommendation_summary.csv).
+
 ## Run it
 
 From the repository root, with Python 3.11:
