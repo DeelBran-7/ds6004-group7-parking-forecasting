@@ -9,6 +9,11 @@ recommendation and evaluation modules to read.
 [预测诊断](examples/pilot/forecast_diagnostics.csv) ·
 [数据审计](examples/pilot/audit.json)。
 
+**Teacher question 2:** the [arrival-risk extension](RISK_MODEL.md) directly
+forecasts the probability of zero free spaces and the probability of fewer
+than three free spaces. It includes XGBoost, CatBoost, two comparators,
+chronological probability calibration, and matched replay on the pilot.
+
 ## Run it
 
 From the repository root, with Python 3.11:
