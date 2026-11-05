@@ -1,0 +1,100 @@
+{
+  "timezone": "Asia/Singapore",
+  "first_time": "2026-10-31T00:15:00",
+  "last_time": "2026-11-02T23:45:00",
+  "rows": 1122,
+  "rows_per_carpark": {
+    "ACB": 279,
+    "KAM": 281,
+    "KAS": 281,
+    "SLS": 281
+  },
+  "observed_slots": 281,
+  "grid_slots": 287,
+  "missing_carpark_slots": 26,
+  "invalid_count_rows": 0,
+  "invalid_lag_rows": 0,
+  "stale_rows": 0,
+  "valid_rows": 1122,
+  "full_rows": 195,
+  "near_full_rows_including_full": 291,
+  "max_lag_seconds": 900,
+  "horizons": {
+    "15": {
+      "train": {
+        "rows": 663,
+        "observed_labels_with_valid_origin": 650,
+        "first_decision_time": "2026-10-31T00:15:00",
+        "last_decision_time": "2026-11-01T18:15:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 0
+      },
+      "validation": {
+        "rows": 215,
+        "observed_labels_with_valid_origin": 202,
+        "first_decision_time": "2026-11-01T19:00:00",
+        "last_decision_time": "2026-11-02T09:00:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 0
+      },
+      "test": {
+        "rows": 228,
+        "observed_labels_with_valid_origin": 224,
+        "first_decision_time": "2026-11-02T09:45:00",
+        "last_decision_time": "2026-11-02T23:45:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 0
+      },
+      "embargo": {
+        "rows": 16,
+        "observed_labels_with_valid_origin": 16,
+        "first_decision_time": "2026-11-01T18:30:00",
+        "last_decision_time": "2026-11-02T09:30:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 0
+      }
+    },
+    "30": {
+      "train": {
+        "rows": 663,
+        "observed_labels_with_valid_origin": 650,
+        "first_decision_time": "2026-10-31T00:15:00",
+        "last_decision_time": "2026-11-01T18:15:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 0
+      },
+      "validation": {
+        "rows": 215,
+        "observed_labels_with_valid_origin": 202,
+        "first_decision_time": "2026-11-01T19:00:00",
+        "last_decision_time": "2026-11-02T09:00:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 0
+      },
+      "test": {
+        "rows": 228,
+        "observed_labels_with_valid_origin": 220,
+        "first_decision_time": "2026-11-02T09:45:00",
+        "last_decision_time": "2026-11-02T23:45:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 0
+      },
+      "embargo": {
+        "rows": 16,
+        "observed_labels_with_valid_origin": 16,
+        "first_decision_time": "2026-11-01T18:30:00",
+        "last_decision_time": "2026-11-02T09:30:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 0
+      }
+    }
+  }
+}
