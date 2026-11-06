@@ -1,0 +1,30 @@
+{
+  "destination": {
+    "name": "Chinatown MRT Station Exit A",
+    "x_coord": 29166.2605,
+    "y_coord": 29571.9581,
+    "radius_m": 1000,
+    "coordinate_reference_system": "EPSG:3414 (SVY21); x=easting, y=northing, in metres",
+    "wgs84_longitude": 103.84379788809954,
+    "wgs84_latitude": 1.2837127704301896,
+    "source_url": "https://data.gov.sg/datasets/d_b39d3a0871985372d7e1637193335da5/view",
+    "source_dataset_id": "d_b39d3a0871985372d7e1637193335da5",
+    "source_feature_objectid": 25179,
+    "source_feature_station_name": "CHINATOWN MRT STATION",
+    "source_feature_exit_code": "Exit A",
+    "source_feature_updated": "20251202172807",
+    "coordinate_conversion_source": "https://app.sla.gov.sg/sirent/About/PlaneCoordinateSystem",
+    "coordinate_conversion_method": "Transverse Mercator on WGS84 ellipsoid with SVY21 projection parameters",
+    "carpark_metadata_source_url": "https://data.gov.sg/datasets/d_23f946fa557947f93a8043bbef41dd09/view",
+    "visitor_parking_reference_url": "https://www.hdb.gov.sg/parking/other-parking-matters/shortterm-parking/shortterm-parking-charges"
+  },
+  "selected_distance_weight": 0.5,
+  "weight_grid": [
+    0.25,
+    0.5,
+    0.75
+  ],
+  "forecast_column": "M1",
+  "low_spaces_threshold": 3,
+  "risk_strategies_included": true
+}

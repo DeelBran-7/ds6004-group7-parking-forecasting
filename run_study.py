@@ -21,7 +21,12 @@ def main():
     parser.add_argument("--repetitions", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=20261105)
     parser.add_argument("--no-figures", action="store_true")
+    parser.add_argument("--validation-start", help="Optional shared validation boundary for history comparisons")
+    parser.add_argument("--test-start", help="Optional shared test boundary, paired with --validation-start")
     args = parser.parse_args()
+    if bool(args.validation_start) != bool(args.test_start):
+        parser.error("Provide both --validation-start and --test-start")
+    boundaries = (args.validation_start, args.test_start) if args.validation_start else None
     if args.repetitions < 1 or args.seed < 0 or args.low_spaces_threshold < 1:
         parser.error("Repetitions and low-space threshold must be positive; seed must be nonnegative")
     base = args.output
@@ -29,9 +34,10 @@ def main():
                                                   ("forecast", "risk", "recommendation", "evaluation"))
     try:
         print("A: fitting occupancy and arrival-risk models", flush=True)
-        forecast.run(args.history, args.holidays, occupancy_dir, max_lag_seconds=args.max_lag_seconds)
+        forecast.run(args.history, args.holidays, occupancy_dir, max_lag_seconds=args.max_lag_seconds,
+                     split_boundaries=boundaries)
         forecast_risk.run(args.history, args.holidays, risk_dir, threshold=args.low_spaces_threshold,
-                          max_lag_seconds=args.max_lag_seconds)
+                          max_lag_seconds=args.max_lag_seconds, split_boundaries=boundaries)
         predictions, risk = occupancy_dir / "predictions.csv", risk_dir / "risk_predictions.csv"
         print("B: replaying matched recommendations", flush=True)
         recommendation.run(predictions, args.metadata, args.destination, rec_dir, risk_path=risk,

@@ -1,0 +1,13 @@
+comparison,horizon_min,cohort,distance_weight,matched_cases,full_rate_delta,full_avoided,new_full,near_full_rate_delta,low_spaces_rate_delta,mean_distance_delta_m
+C-C0,15,open_at_departure,0.5,6794,0,0,0,0,0,0.01939000829
+C-C0,15,visitor_eligible,0.5,6794,0,0,0,0,0,0.01939000829
+C-C0,30,open_at_departure,0.5,6786,0,0,0,0,0,-0.2465418956
+C-C0,30,visitor_eligible,0.5,6786,0,0,0,0,0,-0.2465418956
+C_XGB_RISK-C0,15,open_at_departure,0.5,6794,0,0,0,0.007359434795,0,-26.82441898
+C_XGB_RISK-C0,15,visitor_eligible,0.5,6794,0,0,0,0.007359434795,0,-26.82441898
+C_XGB_RISK-C0,30,open_at_departure,0.5,6786,0,0,0,0.0072207486,0,-26.80523324
+C_XGB_RISK-C0,30,visitor_eligible,0.5,6786,0,0,0,0.0072207486,0,-26.80523324
+C_CAT_RISK-C0,15,open_at_departure,0.5,6794,0,0,0,0.007506623491,0,-26.82720181
+C_CAT_RISK-C0,15,visitor_eligible,0.5,6794,0,0,0,0.007506623491,0,-26.82720181
+C_CAT_RISK-C0,30,open_at_departure,0.5,6786,0,0,0,0.006926024167,0,-26.80165223
+C_CAT_RISK-C0,30,visitor_eligible,0.5,6786,0,0,0,0.006926024167,0,-26.80165223

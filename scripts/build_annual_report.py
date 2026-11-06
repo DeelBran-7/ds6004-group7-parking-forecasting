@@ -35,7 +35,7 @@ def inline(text):
     return text
 
 
-def render_pdf(font_path=None):
+def render_pdf(font_path=None, pdf_name="annual_evaluation.pdf"):
     from reportlab.lib import colors
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.styles import ParagraphStyle
@@ -115,7 +115,7 @@ def render_pdf(font_path=None):
                 w, h = image.size
             limits = {"forecast_mae.png": 210, "data_quality.png": 275, "forecast_by_carpark.png": 310,
                       "full_risk_calibration.png": 260, "recommendation_tradeoff.png": 280}
-            scale = min(width/w, limits[image_path.name]/h)
+            scale = min(width/w, limits.get(image_path.name, 270)/h)
             story += [Image(str(image_path), width=w*scale, height=h*scale), Spacer(1, 4), p(caption, "small")]
         elif line.startswith("|"):
             data = []
@@ -142,29 +142,32 @@ def render_pdf(font_path=None):
         canvas.setStrokeColor(grid)
         canvas.line(42, 39, page_width-42, 39)
         canvas.setFont("ReportBody", 7.4)
-        canvas.drawString(42, 26, "年度测评 | 2026-11-06 | 数值来源：仓库年度评估汇总")
+        canvas.drawString(42, 26, "停车测评 | 2026-11-06 | 数值来源：仓库评估汇总")
         canvas.setFont("Helvetica", 8)
         canvas.drawRightString(page_width-42, 26, f"{doc.page:02d}")
         canvas.restoreState()
 
-    pdf_path = REPORT / "annual_evaluation.pdf"
+    pdf_path = REPORT / pdf_name
+    title = lines[0].lstrip("# ")
     doc = SimpleDocTemplate(str(pdf_path), pagesize=A4, leftMargin=42, rightMargin=42,
-                            topMargin=48, bottomMargin=50, title="DS6004 年度停车预测与推荐测评报告", author="DS6004 Group 7")
+                            topMargin=48, bottomMargin=50, title=title, author="DS6004 Group 7")
     doc.build(story, onFirstPage=frame, onLaterPages=frame)
     return pdf_path
 
 
 def main():
+    global REPORT
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--font", type=Path)
+    parser.add_argument("--report-dir", type=Path, default=REPORT)
+    parser.add_argument("--evaluation-dir", type=Path, default=ROOT / "examples/annual/evaluation")
+    parser.add_argument("--pdf-name", default="annual_evaluation.pdf")
     args = parser.parse_args()
+    REPORT = args.report_dir.resolve()
     (REPORT / "figures").mkdir(parents=True, exist_ok=True)
     for filename in ("forecast_mae.png", "full_risk_calibration.png", "recommendation_tradeoff.png"):
-        shutil.copy2(ROOT / "examples/annual/evaluation" / filename, REPORT / "figures" / filename)
-    for filename in ("data_quality.png", "forecast_by_carpark.png"):
-        if not (REPORT / "figures" / filename).is_file():
-            raise ValueError("Run scripts/build_report_figures.py first")
-    print(render_pdf(args.font))
+        shutil.copy2(args.evaluation_dir / filename, REPORT / "figures" / filename)
+    print(render_pdf(args.font, args.pdf_name))
 
 
 if __name__ == "__main__":

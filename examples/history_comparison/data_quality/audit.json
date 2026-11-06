@@ -1,0 +1,136 @@
+{
+  "source_file": "two_year_training_corrected_proposal.csv",
+  "sha256": "96bd9f118a2873eb2dcddbbec02255c283a02b1002dde07ffb095434359e1b12",
+  "rows": 560637,
+  "first_time": "2024-11-05 00:00:00",
+  "last_time": "2026-11-04 23:45:00",
+  "duplicate_keys": 0,
+  "valid_rows": 549569,
+  "invalid_rows": 11068,
+  "source_pre_correction_valid_rows": 555940,
+  "missing_grid_rows": 3,
+  "valid_with_future_update": 0,
+  "valid_with_future_snapshot": 0,
+  "valid_with_missing_update": 0,
+  "valid_with_missing_snapshot": 0,
+  "valid_update_age_over_300_seconds_from_timestamps": 0,
+  "valid_snapshot_age_over_300_seconds_from_timestamps": 0,
+  "update_age_timestamp_quantiles_on_valid": {
+    "0.0": 17.0,
+    "0.5": 76.0,
+    "0.99": 128.0,
+    "1.0": 300.0
+  },
+  "snapshot_age_timestamp_quantiles_on_valid": {
+    "0.0": 0.0,
+    "0.5": 0.0,
+    "0.99": 0.0,
+    "1.0": 0.0
+  },
+  "loader_vs_source_valid_disagreements": 0,
+  "holiday_flag_disagreements": 0,
+  "source_paths": {
+    "api/data.gov.sg": 560637
+  },
+  "invalid_reason_counts": {
+    "valid": 549998,
+    "snapshot_after_decision_time;update_after_decision_time": 5783,
+    "source_invalid_15min;update_older_than_15min_at_decision;update_older_than_15min_at_snapshot": 4305,
+    "source_invalid_15min;snapshot_older_than_15min;update_older_than_15min_at_decision": 434,
+    "source_invalid_15min;snapshot_after_decision_time;update_older_than_15min_at_decision;update_older_than_15min_at_snapshot": 56,
+    "numeric_or_capacity_invalid;source_invalid_15min;update_timestamp_missing_or_invalid;snapshot_to_update_age_missing": 32,
+    "update_older_than_15min_at_decision": 22,
+    "source_invalid_15min;snapshot_older_than_15min;update_older_than_15min_at_decision;update_older_than_15min_at_snapshot": 6,
+    "snapshot_after_decision_time": 1
+  },
+  "labels": {
+    "15": {
+      "recomputed_eligible": 542374,
+      "supplied_eligible": 542374,
+      "eligibility_disagreements": 0,
+      "occupancy_disagreements_on_eligible": 0,
+      "availability_disagreements_on_eligible": 0,
+      "full_disagreements_on_eligible": 0,
+      "near_full_disagreements_on_eligible": 0
+    },
+    "30": {
+      "recomputed_eligible": 535341,
+      "supplied_eligible": 535341,
+      "eligibility_disagreements": 0,
+      "occupancy_disagreements_on_eligible": 0,
+      "availability_disagreements_on_eligible": 0,
+      "full_disagreements_on_eligible": 0,
+      "near_full_disagreements_on_eligible": 0
+    }
+  },
+  "comparison_to_old_annual": {
+    "old_rows": 280320,
+    "new_recent_year_rows": 280317,
+    "matching_rows": 280317,
+    "only_old_rows": [
+      {
+        "timestamp_sgt": "2026-04-20 14:30:00",
+        "carpark_id": "PRM",
+        "total_lots_reported_old": 234.0,
+        "available_lots_reported_old": 0.0
+      },
+      {
+        "timestamp_sgt": "2026-04-20 14:45:00",
+        "carpark_id": "PRM",
+        "total_lots_reported_old": 234.0,
+        "available_lots_reported_old": 233.0
+      },
+      {
+        "timestamp_sgt": "2026-04-20 15:00:00",
+        "carpark_id": "PRM",
+        "total_lots_reported_old": 234.0,
+        "available_lots_reported_old": 232.0
+      }
+    ],
+    "only_new_count": 0,
+    "old_valid_rows": 278557,
+    "new_recent_valid_rows": 275649,
+    "changed_columns_on_common_rows": {
+      "total_lots_reported": 0,
+      "available_lots_reported": 1856,
+      "lag_seconds": 280317,
+      "snapshot_lag_seconds": 2920,
+      "update_time_sgt": 2904,
+      "snapshot_time_sgt": 280317,
+      "valid_5min": 2905
+    },
+    "old_valid_now_invalid": 2905,
+    "old_invalid_now_valid": 0,
+    "changed_availability_rows_still_valid_in_new": 0,
+    "changed_availability_rows_invalid_in_new": 1856
+  },
+  "loader_audit": {
+    "source_schema": "annual_segmented",
+    "timezone": "Asia/Singapore",
+    "first_time": "2024-11-05T00:00:00",
+    "last_time": "2026-11-04T23:45:00",
+    "rows": 560637,
+    "rows_per_carpark": {
+      "CSM": 70080,
+      "EPM": 70080,
+      "HLM": 70080,
+      "KAM": 70080,
+      "KAS": 70080,
+      "PRM": 70077,
+      "SLS": 70080,
+      "TPM": 70080
+    },
+    "observed_slots": 70080,
+    "grid_slots": 70080,
+    "missing_carpark_slots": 3,
+    "invalid_count_rows": 32,
+    "invalid_lag_rows": 32,
+    "source_quality_excluded_rows": 11068,
+    "stale_rows": 4801,
+    "valid_rows": 549569,
+    "full_rows": 41656,
+    "near_full_rows_including_full": 67774,
+    "max_lag_seconds": 900
+  },
+  "all_rows_snapshot_time_equals_decision_count": 560637
+}

@@ -1,0 +1,15 @@
+{
+  "source_filename": "two_year_training_corrected_proposal.csv",
+  "source_sha256": "96bd9f118a2873eb2dcddbbec02255c283a02b1002dde07ffb095434359e1b12",
+  "source_rows": 560637,
+  "source_start": "2024-11-05T00:00:00",
+  "source_end": "2026-11-04T23:45:00",
+  "recent_year_start": "2025-11-05T00:00:00",
+  "recent_year_rows": 280317,
+  "shared_validation_start": "2026-06-12T00:00:00",
+  "shared_test_start": "2026-08-24T00:00:00",
+  "embargo_minutes": 30,
+  "threshold_free_spaces": 3,
+  "comparison": "Extend the training prefix while preserving recent-year validation and test dates",
+  "additional_run": "Full history with chronological 60/20/20; evaluate separately"
+}

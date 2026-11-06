@@ -6,3 +6,4 @@ __pycache__/
 /outputs/
 /data/raw/
 /annual_training_*.csv
+/two_year_training*.csv

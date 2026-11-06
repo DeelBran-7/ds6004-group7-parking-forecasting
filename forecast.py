@@ -150,12 +150,21 @@ def load_holidays(path):
     return HolidayCalendar(frozenset(dates), frozenset(dates.dt.year))
 
 
-def split_times(decision_time):
+def split_times(decision_time, split_boundaries=None):
     """Split on observed decision timestamps, embargoing preceding origins."""
     times = pd.DatetimeIndex(decision_time.unique()).sort_values()
     if len(times) < 5:
         raise ValueError("At least five distinct timestamps are required for a 60/20/20 split")
-    validation_start, test_start = times[len(times) * 3 // 5], times[len(times) * 4 // 5]
+    if split_boundaries is None:
+        validation_start, test_start = times[len(times) * 3 // 5], times[len(times) * 4 // 5]
+    else:
+        validation_start, test_start = map(pd.Timestamp, split_boundaries)
+        if (validation_start.tz is not None or test_start.tz is not None
+                or not times.min() + EMBARGO < validation_start < test_start <= times.max()
+                or test_start - validation_start <= EMBARGO
+                or validation_start.floor("15min") != validation_start
+                or test_start.floor("15min") != test_start):
+            raise ValueError("Split boundaries need ordered, naive Singapore grid times within the history")
     split = np.select([decision_time < validation_start, decision_time < test_start],
                       ["train", "validation"], default="test")
     for boundary in (validation_start, test_start):
@@ -164,7 +173,7 @@ def split_times(decision_time):
     return split
 
 
-def make_examples(history, holidays, horizon_min):
+def make_examples(history, holidays, horizon_min, split_boundaries=None):
     """Build features and labels by exact carpark and time, even across gaps."""
     if horizon_min not in HORIZONS:
         raise ValueError(f"Unsupported horizon: {horizon_min}")
@@ -191,7 +200,7 @@ def make_examples(history, holidays, horizon_min):
         return history["segment_id"].eq(past_segment).fillna(False)
 
     examples["horizon_min"] = horizon_min
-    examples["split"] = split_times(origin)
+    examples["split"] = split_times(origin, split_boundaries)
     examples["B0"] = examples["current_occupancy"]
     examples["B1"] = exact(target - pd.Timedelta(days=7), "occupancy")
     for lag in LAGS:
@@ -274,14 +283,14 @@ def pilot_metrics(examples):
             }
 
 
-def run(history_path, holidays_path, output_dir, max_lag_seconds=900, carparks=None):
+def run(history_path, holidays_path, output_dir, max_lag_seconds=900, carparks=None, split_boundaries=None):
     history, audit = load_history(history_path, max_lag_seconds, carparks)
     calendar = load_holidays(holidays_path)
     output_dir = Path(output_dir)
     forecasts, metrics, models = [], [], {}
     audit["horizons"] = {}
     for horizon in HORIZONS:
-        examples = make_examples(history, calendar, horizon)
+        examples = make_examples(history, calendar, horizon, split_boundaries)
         models[horizon] = fit_predict(examples)
         metrics.extend(pilot_metrics(examples))
         forecasts.append(examples.loc[examples["split"].isin(["validation", "test"]), OUTPUT_COLUMNS])

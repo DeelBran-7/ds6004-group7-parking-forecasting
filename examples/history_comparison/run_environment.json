@@ -1,0 +1,17 @@
+{
+  "export_date_singapore": "2026-11-06T14:38:05+08:00",
+  "python": "3.11.9",
+  "packages": {
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.7.2",
+    "xgboost": "3.1.2",
+    "catboost": "1.2.8",
+    "matplotlib": "3.11.2"
+  },
+  "source_filename": "two_year_training_corrected_proposal.csv",
+  "raw_history_included": false,
+  "detailed_predictions_included": false,
+  "fitted_models_included": false,
+  "report_generation_note": "These are completed pipeline summaries copied from outputs/history_comparison."
+}

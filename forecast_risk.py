@@ -98,8 +98,8 @@ def raw_scores(examples, train, score, threshold):
         }, "fitted"
 
 
-def forecast_horizon(history, holidays, horizon, threshold, min_calibration_class_count):
-    examples = make_examples(history, holidays, horizon)
+def forecast_horizon(history, holidays, horizon, threshold, min_calibration_class_count, split_boundaries=None):
+    examples = make_examples(history, holidays, horizon, split_boundaries)
     add_risk_targets(examples, threshold)
     usable = examples["forecast_label_eligible"]
     train = examples["split"].eq("train") & usable
@@ -178,7 +178,7 @@ def test_diagnostics(predictions, threshold):
 
 
 def run(history_path, holidays_path, output_dir, threshold=3, max_lag_seconds=900,
-        carparks=None, min_calibration_class_count=5):
+        carparks=None, min_calibration_class_count=5, split_boundaries=None):
     if any(not isinstance(value, (int, np.integer)) or value < 1
            for value in (threshold, min_calibration_class_count)):
         raise ValueError("Threshold and minimum calibration class count must be positive integers")
@@ -189,7 +189,7 @@ def run(history_path, holidays_path, output_dir, threshold=3, max_lag_seconds=90
     omitted_replay_models = {}
     for horizon in HORIZONS:
         rows, details, projected = forecast_horizon(history, holidays, horizon, threshold,
-                                                     min_calibration_class_count)
+                                                     min_calibration_class_count, split_boundaries)
         predictions.append(rows)
         calibration.extend(details)
         adjustments[str(horizon)] = projected

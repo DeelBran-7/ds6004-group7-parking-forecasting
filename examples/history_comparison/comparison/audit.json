@@ -1,0 +1,20 @@
+{
+  "comparison": "two_year_shared minus one_year",
+  "test_start": "2026-08-24T00:00:00",
+  "test_end": "2026-11-04T23:45:00",
+  "validation_start": "2026-06-12T00:00:00",
+  "validation_last_target": "2026-08-23T23:45:00",
+  "test_dates": 73,
+  "identical_forecast_test_rows": 112128,
+  "identical_first_choice_cases": 162960,
+  "selected_distance_weight": 0.5,
+  "low_spaces_threshold": 3,
+  "repetitions": 10000,
+  "seed": 20261105,
+  "support": "All listed models and both history lengths must have finite forecasts on each scored pair",
+  "intervals": "95% paired day-block percentile bootstrap; intervals are not multiplicity-adjusted",
+  "tests": "Two-sided paired day sign-flips; Holm correction within each comparison CSV",
+  "assumptions": "Exchangeable date blocks and symmetric independent day effects; neighboring-day dependence is not modelled",
+  "score_units": "MAE uses occupancy ratios; Brier uses squared probability error; policy rates are fractions; distance uses metres",
+  "zero_differences": "No interval or p-value for no_day_level_variation; this does not establish equivalence"
+}

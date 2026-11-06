@@ -1,0 +1,15 @@
+{
+  "test_start": "2026-08-24",
+  "test_end": "2026-11-04",
+  "test_days": 73,
+  "matched_ranked_rows": 488880,
+  "resampling_unit": "Singapore decision date; retain all paired observations within a date",
+  "bootstrap_repetitions": 10000,
+  "seed": 20261105,
+  "intervals": "95% percentile paired day-block bootstrap; no multiplicity adjustment",
+  "tests": "Two-sided paired day sign flips; Holm adjusted within each comparison table",
+  "assumptions": "Days are treated as exchangeable bootstrap blocks and independent for sign flips. The sign-flip null assumes symmetric day-level differences. Adjacent-day dependence can limit these approximations.",
+  "difference": "Candidate minus reference; negative is lower error, risk, or distance",
+  "selected_distance_weight": 0.5,
+  "low_spaces_threshold": 3
+}
