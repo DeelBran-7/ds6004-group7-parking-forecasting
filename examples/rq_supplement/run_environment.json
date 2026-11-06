@@ -1,0 +1,16 @@
+{
+  "export_date_singapore": "2026-11-06T17:44:12.209290+08:00",
+  "python": "3.11.9",
+  "packages": {
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.7.2",
+    "xgboost": "3.1.2",
+    "catboost": "1.2.8",
+    "matplotlib": "3.11.2"
+  },
+  "base_analysis_commit": "490d2a1315c529580c7eb383931723882bbe2854",
+  "raw_history_included": false,
+  "detailed_predictions_included": false,
+  "fitted_models_included": false
+}

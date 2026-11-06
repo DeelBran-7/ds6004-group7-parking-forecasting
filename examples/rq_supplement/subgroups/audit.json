@@ -1,0 +1,28 @@
+{
+  "analysis_type": "Retrospective exploratory subgroup supplement; no retraining or weight selection",
+  "source_study": "two_year_standard",
+  "test_start": "2026-06-12T00:00:00",
+  "test_end": "2026-11-04T23:45:00",
+  "subgroups": {
+    "overall": "All matched held-out observations",
+    "evening_peak": "17:00 <= departure < 20:00 Singapore time",
+    "weekend": "Departure weekday is Saturday or Sunday"
+  },
+  "groups_may_overlap": true,
+  "forecast_support": "All B0/B1/M0/M1 finite, valid origin and same-segment valid arrival",
+  "policy_support": "Existing matched candidate sets and observed endpoints, separately by candidate cohort",
+  "primary_event": "full at arrival: 0 spaces",
+  "secondary_events": [
+    "low spaces: <3",
+    "near-full: <10% free, including full"
+  ],
+  "selected_distance_weight": 0.25,
+  "low_spaces_threshold": 3,
+  "overall_published_metrics_verified": true,
+  "bootstrap_repetitions": 10000,
+  "seed": 20261105,
+  "intervals": "95% percentile paired day-block bootstrap; intervals not multiplicity-adjusted",
+  "tests": "Two-sided paired day sign flips; Holm across all available comparisons in each CSV",
+  "assumptions": "Independent, exchangeable date blocks; symmetric day effects under the sign-flip null. Adjacent-day dependence is not modelled.",
+  "interpretation": "Subgroup gains are descriptive across groups; no interaction test establishes that one subgroup gains more than another. No interval or p-value for no_day_level_variation does not establish equivalence."
+}

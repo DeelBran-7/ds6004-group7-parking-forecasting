@@ -1,0 +1,43 @@
+{
+  "contract": {
+    "source_filename": "two_year_training_corrected_proposal.csv",
+    "source_sha256": "96bd9f118a2873eb2dcddbbec02255c283a02b1002dde07ffb095434359e1b12",
+    "calendar_filename": "sg_public_holidays_2020_2027.csv",
+    "calendar_sha256": "35e469d2c46642b19e5b17d48348aa5bb00b82aeca6557135e68f2fcd4eb9d5d",
+    "forecasting_code_sha256": "9b9ba460f9607eab17d186dacf313a632b5752ee971d2f8690c9d5a100e417bf",
+    "validation_start": "2025-09-05T00:00:00",
+    "test_start": "2025-11-05T00:00:00",
+    "expected_source_start": "2024-11-05T00:00:00",
+    "expected_source_end": "2026-11-04T23:45:00",
+    "embargo_minutes": 30,
+    "model_pair": "M0/M1: fixed XGBoost parameters; M1 adds only is_holiday"
+  },
+  "training_feature_counts": {
+    "15": {
+      "non_holiday": 216526,
+      "holiday": 8089
+    },
+    "30": {
+      "non_holiday": 213384,
+      "holiday": 7935
+    }
+  },
+  "repetitions": 10000,
+  "seed": 20261105,
+  "interpretation": "Retrospective supplement after inspecting the existing study; not independent confirmation",
+  "training": "Both holiday and non-holiday rows; four regression fits only; no additional tuning",
+  "validation": "Reserved chronological segment; model parameters remain fixed, not tuned on this segment or test",
+  "support": "Same test rows finite for actual occupancy and all B0/B1/M0/M1, with same-segment forecast labels",
+  "grouping": "Holiday status and resampling dates use target_time in Asia/Singapore",
+  "estimand": "Observation-weighted mean absolute loss difference; negative M1-M0 favors the holiday feature",
+  "primary_inference": "Target-date block bootstrap (10000), two-sided block sign flips, Holm within paired_holiday_comparisons.csv",
+  "sensitivity": "Consecutive calendar holiday dates combined into episodes; Holm separately within holiday_episode_comparisons.csv",
+  "uncertainty": "95% percentile intervals are not multiplicity-adjusted. Dates/episodes, not carpark-time rows, are resampling units",
+  "limitations": [
+    "Only 12 scored test holiday dates and 9 consecutive-date episodes",
+    "Episode grouping reduces adjacent-holiday dependence but does not model other cross-episode dependence",
+    "Resampling assumes exchangeable independent blocks; sign flips additionally require symmetric block effects",
+    "No significant difference does not establish equivalence or absence of a holiday effect",
+    "The experiment tests the incremental value of this binary flag, not every possible calendar representation"
+  ]
+}

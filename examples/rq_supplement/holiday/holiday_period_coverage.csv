@@ -1,0 +1,4 @@
+period,first_date,last_date,calendar_dates,holiday_dates,holiday_episodes
+train,2024-11-05,2025-09-04,304,11,10
+validation,2025-09-05,2025-11-04,61,1,1
+test,2025-11-05,2026-11-04,365,12,9

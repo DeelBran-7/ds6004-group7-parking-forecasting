@@ -1,4 +1,4 @@
-"""Export the reviewed annual Markdown report to a printable PDF.
+"""Export a reviewed Markdown study report to a printable PDF.
 
 Run build_report_figures.py first. PDF dependencies: requirements-report.txt.
 Pass --font for an embeddable Chinese TrueType font on another operating system.
@@ -114,7 +114,8 @@ def render_pdf(font_path=None, pdf_name="annual_evaluation.pdf"):
             with PILImage.open(image_path) as image:
                 w, h = image.size
             limits = {"forecast_mae.png": 210, "data_quality.png": 275, "forecast_by_carpark.png": 310,
-                      "full_risk_calibration.png": 260, "recommendation_tradeoff.png": 280}
+                      "full_risk_calibration.png": 260, "recommendation_tradeoff.png": 280,
+                      "recommendation_subgroups.png": 410}
             scale = min(width/w, limits.get(image_path.name, 270)/h)
             story += [Image(str(image_path), width=w*scale, height=h*scale), Spacer(1, 4), p(caption, "small")]
         elif line.startswith("|"):
@@ -162,11 +163,14 @@ def main():
     parser.add_argument("--report-dir", type=Path, default=REPORT)
     parser.add_argument("--evaluation-dir", type=Path, default=ROOT / "examples/annual/evaluation")
     parser.add_argument("--pdf-name", default="annual_evaluation.pdf")
+    parser.add_argument("--skip-evaluation-figures", action="store_true",
+                        help="Use figures already referenced by the report instead of copying the standard three")
     args = parser.parse_args()
     REPORT = args.report_dir.resolve()
     (REPORT / "figures").mkdir(parents=True, exist_ok=True)
-    for filename in ("forecast_mae.png", "full_risk_calibration.png", "recommendation_tradeoff.png"):
-        shutil.copy2(args.evaluation_dir / filename, REPORT / "figures" / filename)
+    if not args.skip_evaluation_figures:
+        for filename in ("forecast_mae.png", "full_risk_calibration.png", "recommendation_tradeoff.png"):
+            shutil.copy2(args.evaluation_dir / filename, REPORT / "figures" / filename)
     print(render_pdf(args.font, args.pdf_name))
 
 
