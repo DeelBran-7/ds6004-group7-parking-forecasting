@@ -1,151 +1,69 @@
-# DS6004 Group 7 — Parking prediction, recommendation and evaluation
+# DS6004 Group 7 · 新加坡停车预测与推荐
 
-**A → B → C is runnable end to end.** A predicts occupancy and arrival risk;
-B replays matched recommendations; C evaluates forecast error, calibrated
-probabilities, parking outcomes and distance, with paired comparisons by day.
+围绕牛车水地铁站 A 出口 1 公里内的 8 个停车场，用 15 分钟快照预测未来 15／30 分钟的占用率与到达满位风险，再回放推荐策略、检验实际效果。A、B、C 三个模块已串成完整流程。
 
-年度实验入口：[年度数据与结果](ANNUAL_RUN.md) · [C 模块和统计方法](EVALUATION.md) ·
-[年度评估汇总与图表](examples/annual/evaluation)。原始年度数据需由组员自行放在本机。
+**先看结果：[年度测评报告（含图）](reports/annual/README.md) · [下载 PDF 报告](reports/annual/annual_evaluation.pdf)**
 
-**Part A: Forecasting.** This module turns 15-minute HDB parking snapshots into
-15- and 30-minute occupancy forecasts. Its CSV output is ready for the
-recommendation and evaluation modules to read.
+| 年度实验概况 | 已验证结果 |
+| --- | --- |
+| 数据 | 365 天、280,320 行；有效记录占 99.37% |
+| 总体占用率预测 | XGBoost M0 相比沿用当前占用率，15／30 分钟 MAE 约降低 20%／33% |
+| 到达满位风险 | 直接风险模型优于占用率风险代理；XGBoost 与 CatBoost 没有显著胜负 |
+| 推荐回放 | 73 天测试中各策略首选均无满位，**不能据此证明推荐降低失败率或策略等效** |
 
-这是截图里“同学 A”的预测模块。快速查看结果：
-[试采预测](examples/pilot/predictions.csv) ·
-[预测诊断](examples/pilot/forecast_diagnostics.csv) ·
-[数据审计](examples/pilot/audit.json)。
+![共同测试样本上的占用率预测误差](reports/annual/figures/forecast_mae.png)
 
-**Teacher question 2:** the [arrival-risk extension](RISK_MODEL.md) directly
-forecasts the probability of zero free spaces and the probability of fewer
-than three free spaces. It includes XGBoost, CatBoost, two comparators,
-chronological probability calibration, and matched replay on the pilot.
+近满时段的占用率误差并非都改善；测试期没有公共假日；PRM 有 3 条容量突变记录待核实。报告保留这些限制，并提供分停车场结果与数据质量检查。
 
-**Part B: Recommendation.** The [Chinatown replay](RECOMMENDATION.md)
-implements the proposal's A/B/C0/C ranking rules and two direct risk variants.
-See the [matched test summary](examples/chinatown_recommendation/recommendation_summary.csv).
+## 三位同学的模块
 
-The forecasting CLI also accepts the segmented annual CSV directly. See the
-[eight-carpark annual run](ANNUAL_RUN.md) for its input policy and commands.
+| 模块 | 主要工作 | 入口与说明 |
+| --- | --- | --- |
+| A · Forecasting | B0/B1/M0/M1 占用率预测；XGBoost、CatBoost 直接预测到达满位与低余位概率；独立时间段校准 | [`forecast.py`](forecast.py)、[`forecast_risk.py`](forecast_risk.py)；[预测方法](docs/forecasting.md)、[风险目标](RISK_MODEL.md) |
+| B · Recommendation | 最近、当前空位最多、当前占用率与预测占用率策略，以及直接风险策略的匹配回放 | [`recommendation.py`](recommendation.py)；[推荐方法](RECOMMENDATION.md) |
+| C · Evaluation | 共同样本误差、风险校准、推荐结果和距离；按日配对置信区间与检验 | [`evaluate.py`](evaluate.py)；[评估口径](EVALUATION.md) |
 
-Run all three parts on the annual data with one command:
+## 跑完整年度实验
 
-```sh
-python -m pip install -r requirements-evaluation.txt
-python run_study.py --history 'annual_training_8_carparks_segmented(1).csv' \
-  --holidays data/sg_public_holidays_2020_2027.csv \
-  --metadata data/chinatown_annual_carparks.csv --destination data/chinatown_destination.json \
-  --output outputs/annual
-```
+需要 **Python 3.11**。先从组内获取约 90 MB 的原始年表 `annual_training_8_carparks_segmented(1).csv`，放在仓库根目录，或将下面的 `--history` 改成文件路径。仓库提供代码、元数据和汇总结果；原始年表未公开上传。
 
-## Run it
-
-From the repository root, with Python 3.11:
+在仓库根目录运行：
 
 ```sh
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt
-python forecast.py \
-  --history data/pilot_15min_history.csv \
+python -m pip install -r requirements-evaluation.txt
+python run_study.py --history 'annual_training_8_carparks_segmented(1).csv' \
   --holidays data/sg_public_holidays_2020_2027.csv \
-  --output outputs/pilot
+  --metadata data/chinatown_annual_carparks.csv \
+  --destination data/chinatown_destination.json \
+  --output outputs/annual
+```
+
+Windows 使用 `.venv\Scripts\Activate.ps1` 激活环境，并将运行命令写成一行。macOS 若提示缺少 `libomp.dylib`，先运行 `brew install libomp`。
+
+结果写入 `outputs/annual/` 下的 `forecast/`、`risk/`、`recommendation/`、`evaluation/`。这些本地输出不自动提交到 GitHub。年度输入规则与时间切分见 [ANNUAL_RUN.md](ANNUAL_RUN.md)。
+
+## 在哪里找文件
+
+| 位置 | 用途 |
+| --- | --- |
+| [`reports/`](reports/README.md) | 面向组员阅读的测评报告、PDF 与图表 |
+| [`examples/annual/`](examples/annual/README.md) | 已运行的年度汇总 CSV、审计和统计结果，供核对报告数字 |
+| [`docs/forecasting.md`](docs/forecasting.md) | A 模块特征、输入输出字段与旧 pilot 说明 |
+| [`data/`](data/) | 小规模 pilot、假日、停车场和目的地元数据 |
+| [`tests/`](tests/) | 数据时序、风险定义、推荐匹配与统计检查 |
+| [`scripts/`](scripts/) | 从年度汇总重新生成报告图和 PDF，见 [报告构建说明](reports/README.md#重新生成图与-pdf) |
+| `outputs/` | 本机重跑生成的预测明细、模型和结果（Git 忽略） |
+
+旧 [`examples/pilot/`](examples/pilot/) 与 [`examples/chinatown_recommendation/`](examples/chinatown_recommendation/) 是短期试采和流程检查，不能替代年度实验结论。
+
+## 验证与数据来源
+
+当前版本 **41 项测试通过**。运行检查：
+
+```sh
 python -m unittest discover -s tests -v
 ```
 
-On Windows, activate with `.venv\Scripts\Activate.ps1` in PowerShell and run
-the `python forecast.py` command on one line. On macOS, if XGBoost cannot
-load `libomp.dylib`, install the OpenMP runtime with `brew install libomp`.
-
-Pass `--carparks KAM KAS SLS` to rerun on those three pilot IDs. This is a
-provisional subset; use the agreed visitor-eligible cohort for the final study.
-Pass `--max-lag-seconds` to change the default 900-second freshness limit.
-
-## Method
-
-Occupancy is `1 - lots_available / total_lots` on the 0–1 scale. For each
-carpark and decision time `t`, a label is a valid observed snapshot for the
-same carpark at **exactly** `t+h`. Missing labels stay blank. Features include
-current occupancy and capacity, observation age, exact 15/30/45/60-minute
-lags, and occupancy mean, standard deviation and observation count over
-`(t−60 min, t]`. Time of day, weekday and weekend features refer to the
-known arrival time `t+h`.
-
-| Model | Definition |
-| --- | --- |
-| B0 | Carry forward observed occupancy at `t`. |
-| B1 | Observed occupancy at `t+h−7 days` for the same carpark. Missing when that snapshot is unavailable. |
-| M0 | XGBoost using the occupancy, capacity and calendar features above, plus carpark indicators fitted on the training set. |
-| M1 | Same training rows and settings as M0; adds the public-holiday flag for the arrival date. |
-
-We fit independent models for the two horizons. M0 and M1 use fixed settings
-(200 rounds, depth 4, learning rate 0.05, seed 42). Both use the same
-chronological 60/20/20 split on distinct observed decision times. Origins in
-the 30 minutes immediately before each split boundary are excluded, so no
-training or validation label reaches the next split. Forecast features use
-only observed data at or before `t` and calendar information known in advance.
-
-The history input must have the columns `timestamp`, `carpark_id`,
-`total_lots`, `lots_available`, and `lag_seconds`. It should already be on a
-15-minute grid and contain car lots only; if `lot_type` is present, only `C`
-rows are loaded. Naive timestamps are Singapore local time; explicit offsets
-are converted to Singapore time. Duplicate keys and off-grid timestamps are
-rejected. Stale readings, negative ages and invalid lot counts are flagged;
-their occupancy is unavailable as a feature or label.
-
-The holidays CSV needs a `date` column and a complete official holiday list
-for each included year, with observed holidays as listed by MOM. Dates in
-uncovered years remain unknown. Use calendar-covered years for both models
-in the formal holiday ablation.
-
-## Handoff to Parts B and C
-
-`outputs/pilot/predictions.csv` has one row per observed decision origin and
-horizon in the validation or test split. Join on **`decision_time`,
-`carpark_id`, `horizon_min`**. All timestamps are Singapore time.
-
-| Columns | How to use them |
-| --- | --- |
-| `split`, `target_time` | Use `validation` to set the ranking configuration; use `test` for final replay. `target_time` is the observed arrival time to check. |
-| `current_is_valid`, `current_occupancy`, `current_lots_available`, `total_lots` | Use current data only when `current_is_valid` is true. The raw lot and capacity columns can be populated on invalid rows. `total_lots` is capacity at decision time. |
-| `B0`, `B1`, `M0`, `M1` | Forecast occupancy ratios. Blank is unavailable. Select the model using validation data; do not choose it from test performance. |
-| `actual_is_observed`, `actual_occupancy`, `actual_lots_available`, `actual_total_lots` | Outcomes for scoring only. Full at arrival means `actual_lots_available == 0`. Near-full means strictly less than 10% of arrival capacity is free. |
-| `forecast_label_eligible` | For segmented annual data, requires a valid origin and observed arrival in the same uninterrupted valid segment. Use for model scoring; endpoint-based recommendation replay can have a different denominator. |
-
-For the C0/C comparison, join the separate distance and visitor eligibility
-data, then use the same eligible candidates and weights for both rules.
-Require complete, observed arrival outcomes for the comparison. Do not
-silently drop a candidate only from one strategy when a forecast is missing.
-`forecast_diagnostics.csv` reports test denominators, MAE, RMSE and near-full
-precision/recall; compare models on the same scored rows if coverage differs.
-`audit.json` records input and split coverage. The CLI also saves four fitted
-XGBoost models; `carpark_indicator_ids` in each model records the mapping for
-`park_0`, `park_1`, etc.
-
-## What the pilot establishes
-
-The supplied CSV has 1,122 rows across ACB, KAM, KAS and SLS from 31 October
-2026 at 00:15 to 2 November at 23:45. Relative to a full grid for these four
-IDs, 26 carpark-time observations are missing. The test split has 224 and
-220 usable arrival labels at 15 and 30 minutes, respectively.
-
-| Horizon | B0 MAE | M0 MAE | M1 MAE | B1 scored rows |
-| --- | ---: | ---: | ---: | ---: |
-| 15 min | 2.82 pp | 3.40 pp | 3.40 pp | 0 |
-| 30 min | 4.41 pp | 4.85 pp | 4.85 pp | 0 |
-
-MAE is expressed here in percentage points of occupancy. B0 has the lowest
-overall MAE in this run. The pilot has no holiday dates and no week-ago
-matches, so it cannot measure the holiday feature's benefit or B1's accuracy.
-ACB is Albert Centre; the four-ID run is a pipeline check, not the final
-Chinatown cohort. The proposal targets roughly 8–12 eligible HDB carparks
-within 1 km of a fixed Chinatown MRT destination. Final experiments need
-the verified cohort and a longer history covering multiple holidays and weeks.
-
-## Data sources
-
-- `data/pilot_15min_history.csv`: Group 7 pilot extract supplied for this module.
-  Original source: [HDB Carpark Availability](https://data.gov.sg/datasets/d_ca933a644e55d34fe21f28b8052fac63/view).
-- `data/sg_public_holidays_2020_2027.csv`: [MOM Singapore Public Holidays](https://data.gov.sg/datasets/d_8ef23381f9417e4d4254ee8b4dcdb176/view).
-- Use [HDB Carpark Information](https://data.gov.sg/datasets/d_23f946fa557947f93a8043bbef41dd09/view)
-  for the separate distance and visitor-eligibility checks.
+数据基础为 [HDB 停车位可用性](https://data.gov.sg/datasets/d_ca933a644e55d34fe21f28b8052fac63/view)、[HDB 停车场资料](https://data.gov.sg/datasets/d_23f946fa557947f93a8043bbef41dd09/view)与 [MOM 公共假日](https://data.gov.sg/datasets/d_8ef23381f9417e4d4254ee8b4dcdb176/view)。年度 CSV 由组内提供；其来源与异常仍需原始快照、采集日志支持，详见 [数据质量说明](examples/annual/data_quality/README.md)。

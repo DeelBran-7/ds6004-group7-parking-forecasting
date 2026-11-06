@@ -9,7 +9,7 @@
 | 预测准确性 | `forecast_metrics.csv` | B0/B1/M0/M1 共同可评分样本的 MAE、RMSE、近满 precision/recall；另分近满、假日和非假日 |
 | 停车场差异 | `forecast_metrics_by_carpark.csv` | 每场分别比较，同一场内仍要求模型共同样本 |
 | 到达风险 | `risk_probability_metrics.csv` | 满位和少于 3 个空位分开；Brier、log loss、AP、AUROC；另报出发时有位子集 |
-| 概率是否可信 | `risk_reliability.csv` | 独立测试段按概率十分位分箱，给出样本数、平均预测概率和真实事件率 |
+| 概率是否可信 | `risk_reliability.csv` | 独立测试段按 10 个百分点的固定概率区间分箱，给出样本数、平均预测概率和真实事件率 |
 | 推荐效果 | `recommendation_metrics.csv` | Top1 满位、近满、低余位；Top3 至少一场有位；直线距离与相对最近场的额外距离 |
 | 配对比较 | `paired_*_comparisons.csv` | 相同样本的模型误差差值、风险分数差值，以及 C/风险策略相对 C0 的结果差值 |
 | 实验审计 | `evaluation_audit.json` | 测试范围、样本量、重采样设定及假设 |
