@@ -1,0 +1,48 @@
+{
+  "source_schema": "annual_segmented",
+  "timezone": "Asia/Singapore",
+  "first_time": "2025-11-05T00:00:00",
+  "last_time": "2026-11-04T23:45:00",
+  "rows": 280320,
+  "rows_per_carpark": {
+    "CSM": 35040,
+    "EPM": 35040,
+    "HLM": 35040,
+    "KAM": 35040,
+    "KAS": 35040,
+    "PRM": 35040,
+    "SLS": 35040,
+    "TPM": 35040
+  },
+  "observed_slots": 35040,
+  "grid_slots": 35040,
+  "missing_carpark_slots": 0,
+  "invalid_count_rows": 0,
+  "invalid_lag_rows": 0,
+  "source_quality_excluded_rows": 1763,
+  "stale_rows": 1574,
+  "valid_rows": 278557,
+  "full_rows": 18137,
+  "near_full_rows_including_full": 30664,
+  "max_lag_seconds": 900,
+  "low_spaces_threshold": 3,
+  "min_calibration_class_count": 5,
+  "adjusted_test_probability_pairs": {
+    "15": {
+      "persistence": 51886,
+      "occupancy_proxy": 48229,
+      "xgboost": 31950,
+      "catboost": 15527
+    },
+    "30": {
+      "persistence": 51886,
+      "occupancy_proxy": 45432,
+      "xgboost": 36103,
+      "catboost": 15765
+    }
+  },
+  "omitted_replay_models": {
+    "15": [],
+    "30": []
+  }
+}

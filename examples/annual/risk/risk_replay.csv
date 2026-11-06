@@ -1,0 +1,13 @@
+horizon_min,strategy,matched_origins,first_full_count,first_full_rate,first_low_spaces_count,first_low_spaces_rate,top_three_any_available_count,top_three_any_available_rate,low_spaces_threshold
+15,most_current_free,6935,0,0.0,0,0.0,6935,1.0,3
+15,lowest_current_occupancy,6935,0,0.0,0,0.0,6935,1.0,3
+15,xgboost_full_risk,6935,0,0.0,0,0.0,6935,1.0,3
+15,catboost_full_risk,6935,0,0.0,0,0.0,6935,1.0,3
+15,persistence_full_risk,6935,0,0.0,1,0.00014419610670511897,6935,1.0,3
+15,occupancy_proxy_full_risk,6935,0,0.0,0,0.0,6935,1.0,3
+30,most_current_free,6927,0,0.0,0,0.0,6927,1.0,3
+30,lowest_current_occupancy,6927,0,0.0,0,0.0,6927,1.0,3
+30,xgboost_full_risk,6927,0,0.0,0,0.0,6927,1.0,3
+30,catboost_full_risk,6927,0,0.0,0,0.0,6927,1.0,3
+30,persistence_full_risk,6927,0,0.0,2,0.00028872527789807997,6927,1.0,3
+30,occupancy_proxy_full_risk,6927,0,0.0,0,0.0,6927,1.0,3

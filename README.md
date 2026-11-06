@@ -1,4 +1,11 @@
-# DS6004 Group 7 — Parking occupancy forecasting
+# DS6004 Group 7 — Parking prediction, recommendation and evaluation
+
+**A → B → C is runnable end to end.** A predicts occupancy and arrival risk;
+B replays matched recommendations; C evaluates forecast error, calibrated
+probabilities, parking outcomes and distance, with paired comparisons by day.
+
+年度实验入口：[年度数据与结果](ANNUAL_RUN.md) · [C 模块和统计方法](EVALUATION.md) ·
+[年度评估汇总与图表](examples/annual/evaluation)。原始年度数据需由组员自行放在本机。
 
 **Part A: Forecasting.** This module turns 15-minute HDB parking snapshots into
 15- and 30-minute occupancy forecasts. Its CSV output is ready for the
@@ -17,6 +24,19 @@ chronological probability calibration, and matched replay on the pilot.
 **Part B: Recommendation.** The [Chinatown replay](RECOMMENDATION.md)
 implements the proposal's A/B/C0/C ranking rules and two direct risk variants.
 See the [matched test summary](examples/chinatown_recommendation/recommendation_summary.csv).
+
+The forecasting CLI also accepts the segmented annual CSV directly. See the
+[eight-carpark annual run](ANNUAL_RUN.md) for its input policy and commands.
+
+Run all three parts on the annual data with one command:
+
+```sh
+python -m pip install -r requirements-evaluation.txt
+python run_study.py --history 'annual_training_8_carparks_segmented(1).csv' \
+  --holidays data/sg_public_holidays_2020_2027.csv \
+  --metadata data/chinatown_annual_carparks.csv --destination data/chinatown_destination.json \
+  --output outputs/annual
+```
 
 ## Run it
 
@@ -90,6 +110,7 @@ horizon in the validation or test split. Join on **`decision_time`,
 | `current_is_valid`, `current_occupancy`, `current_lots_available`, `total_lots` | Use current data only when `current_is_valid` is true. The raw lot and capacity columns can be populated on invalid rows. `total_lots` is capacity at decision time. |
 | `B0`, `B1`, `M0`, `M1` | Forecast occupancy ratios. Blank is unavailable. Select the model using validation data; do not choose it from test performance. |
 | `actual_is_observed`, `actual_occupancy`, `actual_lots_available`, `actual_total_lots` | Outcomes for scoring only. Full at arrival means `actual_lots_available == 0`. Near-full means strictly less than 10% of arrival capacity is free. |
+| `forecast_label_eligible` | For segmented annual data, requires a valid origin and observed arrival in the same uninterrupted valid segment. Use for model scoring; endpoint-based recommendation replay can have a different denominator. |
 
 For the C0/C comparison, join the separate distance and visitor eligibility
 data, then use the same eligible candidates and weights for both rules.

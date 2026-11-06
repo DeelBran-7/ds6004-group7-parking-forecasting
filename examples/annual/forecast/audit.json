@@ -1,0 +1,114 @@
+{
+  "source_schema": "annual_segmented",
+  "timezone": "Asia/Singapore",
+  "first_time": "2025-11-05T00:00:00",
+  "last_time": "2026-11-04T23:45:00",
+  "rows": 280320,
+  "rows_per_carpark": {
+    "CSM": 35040,
+    "EPM": 35040,
+    "HLM": 35040,
+    "KAM": 35040,
+    "KAS": 35040,
+    "PRM": 35040,
+    "SLS": 35040,
+    "TPM": 35040
+  },
+  "observed_slots": 35040,
+  "grid_slots": 35040,
+  "missing_carpark_slots": 0,
+  "invalid_count_rows": 0,
+  "invalid_lag_rows": 0,
+  "source_quality_excluded_rows": 1763,
+  "stale_rows": 1574,
+  "valid_rows": 278557,
+  "full_rows": 18137,
+  "near_full_rows_including_full": 30664,
+  "max_lag_seconds": 900,
+  "horizons": {
+    "15": {
+      "train": {
+        "rows": 168176,
+        "observed_labels_with_valid_origin": 166605,
+        "valid_endpoints_before_segment_filter": 166605,
+        "first_decision_time": "2025-11-05T00:00:00",
+        "last_decision_time": "2026-06-11T23:15:00",
+        "holiday_days": 10,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 159993
+      },
+      "validation": {
+        "rows": 56048,
+        "observed_labels_with_valid_origin": 55819,
+        "valid_endpoints_before_segment_filter": 55819,
+        "first_decision_time": "2026-06-12T00:00:00",
+        "last_decision_time": "2026-08-23T23:15:00",
+        "holiday_days": 2,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 55612
+      },
+      "test": {
+        "rows": 56064,
+        "observed_labels_with_valid_origin": 55724,
+        "valid_endpoints_before_segment_filter": 55724,
+        "first_decision_time": "2026-08-24T00:00:00",
+        "last_decision_time": "2026-11-04T23:45:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 55473
+      },
+      "embargo": {
+        "rows": 32,
+        "observed_labels_with_valid_origin": 32,
+        "valid_endpoints_before_segment_filter": 32,
+        "first_decision_time": "2026-06-11T23:30:00",
+        "last_decision_time": "2026-08-23T23:45:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 32
+      }
+    },
+    "30": {
+      "train": {
+        "rows": 168176,
+        "observed_labels_with_valid_origin": 166341,
+        "valid_endpoints_before_segment_filter": 166543,
+        "first_decision_time": "2025-11-05T00:00:00",
+        "last_decision_time": "2026-06-11T23:15:00",
+        "holiday_days": 10,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 159739
+      },
+      "validation": {
+        "rows": 56048,
+        "observed_labels_with_valid_origin": 55798,
+        "valid_endpoints_before_segment_filter": 55802,
+        "first_decision_time": "2026-06-12T00:00:00",
+        "last_decision_time": "2026-08-23T23:15:00",
+        "holiday_days": 2,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 55591
+      },
+      "test": {
+        "rows": 56064,
+        "observed_labels_with_valid_origin": 55676,
+        "valid_endpoints_before_segment_filter": 55687,
+        "first_decision_time": "2026-08-24T00:00:00",
+        "last_decision_time": "2026-11-04T23:45:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 55425
+      },
+      "embargo": {
+        "rows": 32,
+        "observed_labels_with_valid_origin": 32,
+        "valid_endpoints_before_segment_filter": 32,
+        "first_decision_time": "2026-06-11T23:30:00",
+        "last_decision_time": "2026-08-23T23:45:00",
+        "holiday_days": 0,
+        "unknown_holiday_labels": 0,
+        "b1_matches": 32
+      }
+    }
+  }
+}

@@ -1,0 +1,4 @@
+timestamp_sgt,carpark_id,split,annual_modal_capacity,total_lots_reported,available_lots_reported,valid_5min,source_path,issue,handling
+2026-04-20 14:30:00,PRM,train,576.0,234.0,0.0,True,raw/20260420T1430.json.gz,reported_capacity_differs_from_annual_mode,retained_in_main_analysis_pending_source_verification
+2026-04-20 14:45:00,PRM,train,576.0,234.0,233.0,True,raw/20260420T1445.json.gz,reported_capacity_differs_from_annual_mode,retained_in_main_analysis_pending_source_verification
+2026-04-20 15:00:00,PRM,train,576.0,234.0,232.0,True,raw/20260420T1500.json.gz,reported_capacity_differs_from_annual_mode,retained_in_main_analysis_pending_source_verification

@@ -14,6 +14,9 @@ HORIZONS = (15, 30)
 EMBARGO = pd.Timedelta(minutes=max(HORIZONS))
 LAGS = (15, 30, 45, 60)
 REQUIRED = {"timestamp", "carpark_id", "total_lots", "lots_available", "lag_seconds"}
+ANNUAL_FIELDS = {"timestamp_sgt", "carpark_id", "lot_type", "total_lots_reported",
+                 "available_lots_reported", "lag_seconds", "snapshot_lag_seconds",
+                 "valid_5min", "segment_id"}
 FEATURES = [
     "current_occupancy", "total_lots", "lag_seconds", "target_slot_sin",
     "target_slot_cos", "target_weekday", "target_is_weekend",
@@ -24,15 +27,37 @@ OUTPUT_COLUMNS = [
     "decision_time", "target_time", "carpark_id", "horizon_min", "split",
     "current_occupancy", "total_lots", "current_lots_available", "lag_seconds",
     "current_is_valid", "is_holiday", "actual_is_observed", "actual_occupancy",
-    "actual_total_lots", "actual_lots_available", "B0", "B1", "M0", "M1",
+    "actual_total_lots", "actual_lots_available", "forecast_label_eligible", "B0", "B1", "M0", "M1",
 ]
 
 
+def read_history_source(path):
+    """Accept the pilot and annual schemas without reading precomputed targets."""
+    header = set(pd.read_csv(path, nrows=0).columns)
+    if "timestamp_sgt" not in header:
+        return pd.read_csv(path, dtype={"carpark_id": "string"}), "pilot"
+    if missing := ANNUAL_FIELDS.difference(header):
+        raise ValueError(f"Missing annual history columns: {', '.join(sorted(missing))}")
+    frame = pd.read_csv(path, usecols=sorted(ANNUAL_FIELDS),
+                        dtype={"carpark_id": "string", "segment_id": "string"})
+    frame = frame.rename(columns={"timestamp_sgt": "timestamp", "total_lots_reported": "total_lots",
+                                  "available_lots_reported": "lots_available"})
+    quality = frame["valid_5min"].astype("string").str.strip().str.lower()
+    if not quality.isin(["true", "false"]).all():
+        raise ValueError("Annual valid_5min values must be true or false")
+    age = frame[["lag_seconds", "snapshot_lag_seconds"]].apply(pd.to_numeric, errors="coerce")
+    both_fresh = np.isfinite(age).all(axis=1) & age.ge(0).all(axis=1) & age.le(300).all(axis=1)
+    frame["source_usable"] = quality.eq("true") & both_fresh & frame["segment_id"].notna()
+    # Preserve the older of the source reading and the API snapshot as the feature age.
+    frame["lag_seconds"] = age.max(axis=1, skipna=False)
+    return frame, "annual_segmented"
+
+
 def load_history(path, max_lag_seconds=900, carparks=None):
-    """Load the pilot schema; keep invalid snapshots flagged but unusable."""
+    """Load either source schema and keep invalid snapshots flagged."""
     if not math.isfinite(max_lag_seconds) or max_lag_seconds < 0:
         raise ValueError("max_lag_seconds must be finite and nonnegative")
-    frame = pd.read_csv(path, dtype={"carpark_id": "string"})
+    frame, source_schema = read_history_source(path)
     if missing := REQUIRED.difference(frame.columns):
         raise ValueError(f"Missing history columns: {', '.join(sorted(missing))}")
     if "lot_type" in frame:
@@ -68,19 +93,33 @@ def load_history(path, max_lag_seconds=900, carparks=None):
                       | (free < 0) | (free > capacity) | (capacity % 1 != 0) | (free % 1 != 0))
     bad_age = ~np.isfinite(age) | (age < 0)
     stale = age > max_lag_seconds
-    valid = ~(bad_counts | bad_age | stale)
+    source_excluded = ~frame["source_usable"] if "source_usable" in frame else pd.Series(False, index=frame.index)
+    valid = ~(bad_counts | bad_age | stale | source_excluded)
     frame["is_valid"] = valid
     frame["occupancy"] = 1.0 - free.where(valid) / capacity.where(valid)
+    if source_schema == "annual_segmented":
+        # A segment cannot skip a timestamp or reuse its ID after a gap.
+        segmented = frame.loc[~source_excluded, ["carpark_id", "segment_id", "timestamp"]].sort_values("timestamp")
+        step = segmented.groupby(["carpark_id", "segment_id"], sort=False)["timestamp"].diff()
+        if not step.dropna().eq(pd.Timedelta(minutes=15)).all():
+            raise ValueError("Annual segments must contain contiguous 15-minute observations")
+        active = frame.loc[valid, ["carpark_id", "segment_id", "timestamp"]].sort_values(["carpark_id", "timestamp"])
+        new_segment = (active["carpark_id"].ne(active["carpark_id"].shift())
+                       | active["segment_id"].ne(active["segment_id"].shift())
+                       | active["timestamp"].diff().ne(pd.Timedelta(minutes=15)))
+        # A stricter caller freshness limit can introduce new gaps within a source segment.
+        frame["segment_id"] = new_segment.fillna(True).cumsum().reindex(frame.index).astype("Int64")
     observed_slots = int(times.nunique())
     grid_slots = int((times.max() - times.min()) // pd.Timedelta(minutes=15)) + 1
     counts = frame.groupby("carpark_id", observed=True).size()
     audit = {
-        "timezone": "Asia/Singapore", "first_time": times.min().isoformat(),
+        "source_schema": source_schema, "timezone": "Asia/Singapore", "first_time": times.min().isoformat(),
         "last_time": times.max().isoformat(), "rows": len(frame),
         "rows_per_carpark": {key: int(value) for key, value in counts.items()},
         "observed_slots": observed_slots, "grid_slots": grid_slots,
         "missing_carpark_slots": grid_slots * len(counts) - len(frame),
         "invalid_count_rows": int(bad_counts.sum()), "invalid_lag_rows": int(bad_age.sum()),
+        "source_quality_excluded_rows": int(source_excluded.sum()),
         "stale_rows": int(stale.sum()), "valid_rows": int(valid.sum()),
         "full_rows": int((valid & free.eq(0)).sum()),
         "near_full_rows_including_full": int((valid & free.mul(10).lt(capacity)).sum()),
@@ -144,12 +183,20 @@ def make_examples(history, holidays, horizon_min):
         keys = pd.MultiIndex.from_arrays([examples["carpark_id"], times], names=index.index.names)
         return observed[columns].reindex(keys).to_numpy()
 
+    def same_segment(times):
+        if "segment_id" not in history:
+            return pd.Series(True, index=examples.index)
+        keys = pd.MultiIndex.from_arrays([examples["carpark_id"], times], names=index.index.names)
+        past_segment = pd.Series(index["segment_id"].reindex(keys).array, index=examples.index)
+        return history["segment_id"].eq(past_segment).fillna(False)
+
     examples["horizon_min"] = horizon_min
     examples["split"] = split_times(origin)
     examples["B0"] = examples["current_occupancy"]
     examples["B1"] = exact(target - pd.Timedelta(days=7), "occupancy")
     for lag in LAGS:
-        examples[f"occ_lag_{lag}"] = exact(origin - pd.Timedelta(minutes=lag), "occupancy")
+        past = origin - pd.Timedelta(minutes=lag)
+        examples[f"occ_lag_{lag}"] = np.where(same_segment(past), exact(past, "occupancy"), np.nan)
     # One-hour window (t-45, t-30, t-15, t), allowing missing history.
     window = examples[["current_occupancy", "occ_lag_15", "occ_lag_30", "occ_lag_45"]]
     examples["occ_roll_mean_60"] = window.mean(axis=1)
@@ -163,6 +210,10 @@ def make_examples(history, holidays, horizon_min):
     labels = ["actual_occupancy", "actual_total_lots", "actual_lots_available"]
     examples[labels] = exact(target, ["occupancy", "total_lots", "lots_available"])
     examples["actual_is_observed"] = examples["actual_occupancy"].notna()
+    # Replay can score a genuine observed endpoint even across a segment break.
+    # Model fitting, calibration and forecast metrics use within-segment labels.
+    examples["forecast_label_eligible"] = (examples["current_is_valid"]
+                                            & examples["actual_is_observed"] & same_segment(target))
     return examples
 
 
@@ -170,8 +221,7 @@ def fit_predict(examples):
     """Train paired XGBoost regressors, predicting validation and test origins."""
     import xgboost as xgb
 
-    train = (examples["split"].eq("train") & examples["current_is_valid"]
-             & examples["actual_is_observed"])
+    train = examples["split"].eq("train") & examples["forecast_label_eligible"]
     predict = examples["split"].isin(["validation", "test"]) & examples["current_is_valid"]
     if not train.any():
         raise ValueError("No usable training labels after the embargo and quality checks")
@@ -198,8 +248,7 @@ def fit_predict(examples):
 
 def pilot_metrics(examples):
     """Smoke-test metrics with each baseline's actual denominator."""
-    test = examples.loc[examples["split"].eq("test") & examples["current_is_valid"]
-                        & examples["actual_is_observed"]]
+    test = examples.loc[examples["split"].eq("test") & examples["forecast_label_eligible"]]
     groups = {
         "all": test,
         "near_full": test.loc[test["actual_lots_available"].mul(10).lt(test["actual_total_lots"])],
@@ -239,9 +288,10 @@ def run(history_path, holidays_path, output_dir, max_lag_seconds=900, carparks=N
         audit["horizons"][str(horizon)] = {}
         for split in ("train", "validation", "test", "embargo"):
             part = examples.loc[examples["split"].eq(split)]
-            labeled = part.loc[part["current_is_valid"] & part["actual_is_observed"]]
+            labeled = part.loc[part["forecast_label_eligible"]]
             audit["horizons"][str(horizon)][split] = {
                 "rows": len(part), "observed_labels_with_valid_origin": len(labeled),
+                "valid_endpoints_before_segment_filter": int((part["current_is_valid"] & part["actual_is_observed"]).sum()),
                 "first_decision_time": part["decision_time"].min().isoformat() if len(part) else None,
                 "last_decision_time": part["decision_time"].max().isoformat() if len(part) else None,
                 "holiday_days": int(labeled.loc[labeled["is_holiday"].eq(1), "target_time"].dt.date.nunique()),

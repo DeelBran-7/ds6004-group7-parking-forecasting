@@ -1,0 +1,7 @@
+horizon_min,cohort,strategy,distance_weight,matched_cases,decision_dates,top1_full_count,top1_full_rate,top1_near_full_count,top1_near_full_rate,top1_low_spaces_count,top1_low_spaces_rate,top3_any_available_rate,mean_distance_m,mean_extra_vs_nearest_m,selected
+15,visitor_eligible,C0,0.25,6944,73,1,0.0001440092166,1,0.0001440092166,1,0.0001440092166,1,263.6087833,61.49585288,False
+30,visitor_eligible,C0,0.25,6941,73,2,0.0002881429189,2,0.0002881429189,2,0.0002881429189,1,263.6196706,61.50674015,False
+15,visitor_eligible,C0,0.5,6944,73,0,0,0,0,0,0,1,230.1620969,28.04916645,True
+30,visitor_eligible,C0,0.5,6941,73,0,0,0,0,0,0,1,230.1636502,28.05071975,True
+15,visitor_eligible,C0,0.75,6944,73,0,0,0,0,0,0,1,213.2056502,11.0927198,False
+30,visitor_eligible,C0,0.75,6941,73,0,0,1,0.0001440714594,0,0,1,213.2104446,11.09751423,False

@@ -1,0 +1,3 @@
+horizon_min,matched_rows,vacancy_declined_count,vacancy_declined_rate,open_at_departure_count,open_to_full_count,open_to_full_rate,safe_at_departure_count,safe_to_low_count,safe_to_low_rate,low_spaces_threshold
+15,55724,21715,0.38968846457540735,52290,345,0.006597819850831899,51840,330,0.00636574074074074,3
+30,55687,22932,0.4118016772316699,52255,477,0.00912831308008803,51805,479,0.009246211755622045,3

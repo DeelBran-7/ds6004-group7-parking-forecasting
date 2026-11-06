@@ -19,6 +19,7 @@ OUTPUT_BASE = [
     "decision_time", "target_time", "carpark_id", "horizon_min",
     "current_is_valid", "current_lots_available", "current_occupancy", "total_lots",
     "actual_is_observed", "actual_lots_available", "actual_total_lots",
+    "forecast_label_eligible",
     "actual_full", "actual_low_spaces", "low_spaces_threshold",
 ]
 XGB_PARAMS = {"max_depth": 4, "eta": 0.05, "tree_method": "hist", "seed": 42, "nthread": 2}
@@ -100,7 +101,7 @@ def raw_scores(examples, train, score, threshold):
 def forecast_horizon(history, holidays, horizon, threshold, min_calibration_class_count):
     examples = make_examples(history, holidays, horizon)
     add_risk_targets(examples, threshold)
-    usable = examples["current_is_valid"] & examples["actual_is_observed"]
+    usable = examples["forecast_label_eligible"]
     train = examples["split"].eq("train") & usable
     calibration = examples["split"].eq("validation") & usable
     test = examples["split"].eq("test")
@@ -152,7 +153,7 @@ def forecast_horizon(history, holidays, horizon, threshold, min_calibration_clas
 
 def test_diagnostics(predictions, threshold):
     """Score test rows only; retain denominators for at-risk subsets."""
-    valid = predictions["current_is_valid"] & predictions["actual_is_observed"]
+    valid = predictions["forecast_label_eligible"]
     groups = {"all": valid, "open_at_departure": valid & predictions["current_lots_available"].gt(0),
               "safe_at_departure": valid & predictions["current_lots_available"].ge(threshold)}
     metrics, reliability = [], []
