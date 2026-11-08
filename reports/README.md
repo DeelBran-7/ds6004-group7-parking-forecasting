@@ -4,11 +4,14 @@
 
 | 报告 | 内容 | 格式 |
 | --- | --- | --- |
-| 最新：RQ 补充测评 | 完整后一年假日测试；原标准测试晚高峰、周末；保留有利与不利发现 | [图文报告](rq_supplement/README.md) · [4 页 PDF](rq_supplement/rq_supplement.pdf) |
+| 最新：RQ2 规则与预测增量 | 两轮门槛实验；距离收益、近满代价及同规则预测增量，失败结果保留 | [图文报告](rq2_gate/README.md) · [3 页 PDF](rq2_gate/rq2_gate.pdf) |
+| RQ 补充测评 | 完整后一年假日测试；原标准测试晚高峰、周末；保留有利与不利发现 | [图文报告](rq_supplement/README.md) · [4 页 PDF](rq_supplement/rq_supplement.pdf) |
 | 一年与两年对比 | 修正版数据的公平历史长度比较，以及完整两年 60/20/20 测评 | [图文报告](history_comparison/README.md) · [6 页 PDF](history_comparison/history_comparison.pdf) |
 | 年度 A → B → C 测评 | 8 个停车场、365 天数据；预测、到达风险、推荐效果及数据质量 | [图文报告](annual/README.md) · [PDF](annual/annual_evaluation.pdf) |
 
 RQ 补充对应 [`examples/rq_supplement/`](../examples/rq_supplement/README.md)，历史长度与标准两年对应 [`examples/history_comparison/`](../examples/history_comparison/README.md)，旧年度对应 [`examples/annual/`](../examples/annual/README.md)。逐时点预测与完整回放明细需要在本机重跑，位于 `outputs/`。旧报告保留原始实验、清洗版本与结论。
+
+RQ2 新扩展对应 [`examples/rq2_gate/`](../examples/rq2_gate/README.md) 和 [`examples/rq2_buffered_gate/`](../examples/rq2_buffered_gate/README.md)。原实验结果不被新规则替代。
 
 ## 重新生成图与 PDF
 
@@ -16,6 +19,9 @@ RQ 补充对应 [`examples/rq_supplement/`](../examples/rq_supplement/README.md)
 
 ```sh
 python -m pip install -r requirements-report.txt
+python scripts/build_rq2_gate_summary.py
+python scripts/build_annual_report.py --report-dir reports/rq2_gate \
+  --skip-evaluation-figures --pdf-name rq2_gate.pdf
 python scripts/build_annual_report.py --report-dir reports/rq_supplement \
   --skip-evaluation-figures --pdf-name rq_supplement.pdf
 python scripts/build_annual_report.py --report-dir reports/history_comparison \

@@ -2,7 +2,9 @@
 
 围绕牛车水地铁站 A 出口 1 公里内的 8 个停车场，用 15 分钟快照预测未来 15／30 分钟的占用率与到达满位风险，再回放推荐策略、检验实际效果。A、B、C 三个模块已串成完整流程。
 
-**最新补充：[RQ1 / RQ2 图文测评](reports/rq_supplement/README.md) · [下载 4 页 PDF](reports/rq_supplement/rq_supplement.pdf)**
+**最新扩展：[RQ2 规则、余量与预测增量](reports/rq2_gate/README.md) · [下载 PDF](reports/rq2_gate/rq2_gate.pdf)**
+
+假日与时段补充：[RQ1 / RQ2 图文测评](reports/rq_supplement/README.md) · [4 页 PDF](reports/rq_supplement/rq_supplement.pdf)
 
 原主实验：[一年与两年对比及标准两年报告](reports/history_comparison/README.md) · [6 页 PDF](reports/history_comparison/history_comparison.pdf)
 
@@ -11,6 +13,7 @@
 | 数据 | 730 天、560,637 行；有效记录占 98.03% |
 | RQ1 假日增量 | 新的完整后一年留出含 12 个假日、9 组连续假日；M1 对 M0 的假日 MAE 下降 1.28% / 3.58%，按日与按组检验均支持小幅收益；总体未全面改善 |
 | RQ2 推荐增量 | 原标准测试的晚高峰 C / C0 均未遇满位，但 C 的平均直线距离增加 12.81 / 27.50 米；周末未见显著收益 |
+| RQ2 规则扩展 | 余位门槛加经验余量后，相对旧 C0 距离少约 60 米，但近满增多；同规则下预测只额外少 0.023 / 0.089 米，满位次数相同，原预测增量仍很小 |
 | 一年 vs 两年 | 固定同一 73 天测试期；两年历史使 M0 / M1 的 MAE 下降约 1.3%-1.7%，Holm p 约 0.0012 |
 | 风险与推荐 | 历史长度增加后没有显著改善，不能宣称完整流程全面胜出 |
 | 标准两年运行 | 另外完成 60/20/20 全流程，146 天测试；直接风险模型优于占用率代理，XGBoost 与 CatBoost 满位 Brier 无显著胜负 |
@@ -18,6 +21,8 @@
 ![补充时间留出中每个假日的M1减M0误差](reports/rq_supplement/figures/holiday_daily_effect.png)
 
 RQ 补充是查看既有结果后固定方案执行的回顾性分析，不能代替全新独立确认。晚高峰与周末仍有基准误差改善，但改善点估计未超过总体；所有不利结果也已保留。详细设计见 [补充实验方案](docs/rq_supplement_protocol.md)。
+
+RQ2 新扩展保留两轮完整结果：直接门槛未通过验证条件；经验余量版在晚验证段通过观察条件，但该段各方案满位 / 低余位均为零，不能视为安全认证。规则与历史余量的收益不归因于预测，原 C−C0 主实验不变，详见 [RQ2 固定方案与归因](docs/rq2_gate_protocol.md)。
 
 一年对照从最新两年修正版截取后重新训练，排除旧数据清洗差异。共享测试期无公共假日；标准两年测试期有 2 个。新文件已去除旧 PRM 的 3 条容量异常记录，采集与修正过程仍需原始快照、日志支持。
 
@@ -57,6 +62,7 @@ Windows 使用 `.venv\Scripts\Activate.ps1` 激活环境，并将运行命令写
 | 位置 | 用途 |
 | --- | --- |
 | [`reports/`](reports/README.md) | 面向组员阅读的测评报告、PDF 与图表 |
+| [`examples/rq2_buffered_gate/`](examples/rq2_buffered_gate/README.md) | 经验误差余量的完整结果、16组敏感性与复现；[第一阶段失败诊断](examples/rq2_gate/README.md)亦保留 |
 | [`examples/rq_supplement/`](examples/rq_supplement/README.md) | 假日时间留出、晚高峰 / 周末的结果与两条复现命令 |
 | [`examples/history_comparison/`](examples/history_comparison/README.md) | 最新三组汇总、历史长度配对比较、审计和软件版本 |
 | [`examples/annual/`](examples/annual/README.md) | 旧版年度数据的历史结果 |
@@ -70,7 +76,7 @@ Windows 使用 `.venv\Scripts\Activate.ps1` 激活环境，并将运行命令写
 
 ## 验证与数据来源
 
-当前版本 **50 项测试通过**。运行检查：
+当前版本 **63 项测试通过**。运行检查：
 
 ```sh
 python -m unittest discover -s tests -v

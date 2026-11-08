@@ -1,0 +1,55 @@
+{
+  "analysis_type": "Retrospective RQ2 empirical-buffer extension; not independent confirmation",
+  "input_sha256": {
+    "outputs/history_comparison/two_year_standard/forecast/predictions.csv": "d07b167a658cb4e81456d73374732b943e39bcf56f6b96a73b1f4243a9f1fe82",
+    "outputs/history_comparison/two_year_standard/forecast/audit.json": "4dbe66268207bdd44008fda5ff3316b7cc004fc9ece948352fcc43fe25ed227a",
+    "outputs/history_comparison/two_year_standard/risk/risk_predictions.csv": "591219c41946b463bc408bd59f45032f8f712a3e2d61ea7da77fea6e9d871c7a",
+    "outputs/history_comparison/two_year_standard/recommendation/replay_settings.json": "cec6e4051bf3bd801d4cc010d87aa221f6870e7d9d3990a8a27aef2533baa929",
+    "outputs/history_comparison/two_year_standard/recommendation/recommendation_rankings.csv": "224330d9c345e46acc3b08ea27cf777a847fb2d5b1e6b36768491765351bfe78",
+    "outputs/history_comparison/two_year_standard/evaluation/recommendation_metrics.csv": "b5da39c9fa2bdddb1b8913040b330dd43df94841436f87c8933dac574f2c6007",
+    "data/chinatown_annual_carparks.csv": "55abef644608954ce1f19d27522b293fb01a683fd4adabc37688713a7b5038a9",
+    "data/chinatown_destination.json": "3cd26f1197a742ec9cb84b4b252cc76b2e51d494def08684d615f297dd48b766"
+  },
+  "quantile_grid": [
+    0.9,
+    0.95,
+    0.975,
+    0.99
+  ],
+  "threshold_grid": [
+    3,
+    5,
+    10,
+    20
+  ],
+  "selected_quantile": 0.9,
+  "selected_threshold": 3,
+  "selected_observed_validation_constraints_satisfied": true,
+  "diagnostic_fallback_used": false,
+  "accepted_replacement": "CURRENT_BUFFERED_GATE is validation-feasible for further study",
+  "selection": "CURRENT_BUFFERED_GATE late-validation full and <3 counts no greater than same-pool C0 at each horizon; minimum pooled distance; ties smaller q then k. Forecast-buffer/test outcomes excluded. No feasible pair uses fixed (.95,3) only diagnostically.",
+  "gate_rule": "clip(raw spaces minus signal-specific calibration margin, 0, current capacity); >=k nearest first, otherwise largest buffered estimate then distance then ID",
+  "forecast_spaces": "(1-M1)*current total_lots; no future capacity for ranking",
+  "historical_current_baseline": "Current buffer uses historical change residuals, but no M1 signal; it is not original C0",
+  "cohort_filter": "True current_lots_available > 0, never buffer-adjusted availability",
+  "quantile_method": "higher",
+  "boundary_numeric_tolerance": 1e-09,
+  "warning": "Empirical residual buffers and observed validation constraints are not safety/conformal guarantees; adjacent residuals are dependent",
+  "primary_cohort": "open_at_departure",
+  "primary_comparison": "FORECAST_BUFFERED_GATE-CURRENT_BUFFERED_GATE",
+  "primary_event": "full: zero spaces",
+  "secondary_events": [
+    "low: <3 spaces",
+    "near-full: <10% free including full"
+  ],
+  "original_weight": 0.25,
+  "original_rankings_and_metrics_verified": true,
+  "test_start": "2026-06-12T00:15:00",
+  "test_end": "2026-11-04T23:30:00",
+  "resampling": "10000 paired Singapore departure-date blocks; seed 20261105; observation-weighted differences",
+  "inference": "95% percentile intervals not multiplicity adjusted; two-sided day-sign flips; Holm across complete paired_policy_comparisons.csv",
+  "assumptions": "Exchangeable independent date blocks; symmetric day effects for sign flips; neighboring-day dependence not modelled",
+  "interpretation": "Forecast-vs-current buffer isolates the signal-plus-signal-specific-buffer increment. Current buffer vs C0 is a rule/history increment; forecast buffer vs C0 combines both. Non-significance is not equivalence.",
+  "sensitivity": "All pre-fixed q/k test metrics retained; never used for choosing parameters",
+  "method_search_stops_after_this_extension": true
+}

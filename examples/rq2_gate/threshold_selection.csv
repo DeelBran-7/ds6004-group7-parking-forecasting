@@ -1,0 +1,6 @@
+threshold,feasible_observed_constraints,pooled_mean_distance_m,full_count_15,full_budget_15,low_count_15,low_budget_15,full_count_30,full_budget_30,low_count_30,low_budget_30,selected,fallback_used
+1,False,202.8237425,51,2,67,2,71,5,84,5,False,True
+3,False,202.8989435,45,2,59,2,67,5,80,5,True,True
+5,False,202.9745895,37,2,51,2,60,5,70,5,False,True
+10,False,203.2019796,17,2,23,2,42,5,51,5,False,True
+20,False,203.7100113,7,2,9,2,22,5,26,5,False,True

@@ -1,0 +1,17 @@
+quantile,threshold,feasible_observed_constraints,pooled_mean_distance_m,full_count_15,full_budget_15,low_count_15,low_budget_15,full_count_30,full_budget_30,low_count_30,low_budget_30,selected,diagnostic_fallback_used
+0.9,3,True,202.2902883,0,0,0,0,0,0,0,0,True,False
+0.9,5,True,202.3066294,0,0,0,0,0,0,0,0,False,False
+0.9,10,True,202.5999823,0,0,0,0,0,0,0,0,False,False
+0.9,20,True,203.091034,0,0,0,0,0,0,0,0,False,False
+0.95,3,True,202.6489063,0,0,0,0,0,0,0,0,False,False
+0.95,5,True,202.7944552,0,0,0,0,0,0,0,0,False,False
+0.95,10,True,202.9708825,0,0,0,0,0,0,0,0,False,False
+0.95,20,True,203.5531994,0,0,0,0,0,0,0,0,False,False
+0.975,3,True,203.0668233,0,0,0,0,0,0,0,0,False,False
+0.975,5,True,203.1692538,0,0,0,0,0,0,0,0,False,False
+0.975,10,True,203.3878677,0,0,0,0,0,0,0,0,False,False
+0.975,20,True,204.1240764,0,0,0,0,0,0,0,0,False,False
+0.99,3,True,206.5694635,0,0,0,0,0,0,0,0,False,False
+0.99,5,True,206.8018457,0,0,0,0,0,0,0,0,False,False
+0.99,10,True,207.5218703,0,0,0,0,0,0,0,0,False,False
+0.99,20,True,208.5867572,0,0,0,0,0,0,0,0,False,False

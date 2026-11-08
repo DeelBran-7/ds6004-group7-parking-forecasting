@@ -1,0 +1,28 @@
+{
+  "training": {
+    "15": {
+      "last_training_origin": "2026-01-16T23:15:00",
+      "last_training_target": "2026-01-16T23:30:00"
+    },
+    "30": {
+      "last_training_origin": "2026-01-16T23:15:00",
+      "last_training_target": "2026-01-16T23:45:00"
+    }
+  },
+  "calibration_origin_start": "2026-01-17T00:00:00",
+  "calibration_origin_exclusive_end": "2026-03-31T23:30:00",
+  "calibration_target_exclusive_end": "2026-04-01T00:00:00",
+  "embargo_minutes": 30,
+  "actual_first_origin": "2026-01-17T00:15:00",
+  "actual_last_origin": "2026-03-31T23:15:00",
+  "actual_last_target": "2026-03-31T23:45:00",
+  "calibration_samples": 108338,
+  "same_samples_for_both_signals": true,
+  "same_segment_label_eligibility_required": true,
+  "quantile_method": "higher",
+  "margin_definition": "max(0, higher quantile(raw estimated spaces - observed arrival spaces))",
+  "selection_first_origin": "2026-04-01T00:15:00",
+  "selection_last_target": "2026-06-11T23:45:00",
+  "forecast_training_precedes_calibration": true,
+  "test_origin_start": "2026-06-12T00:00:00"
+}
