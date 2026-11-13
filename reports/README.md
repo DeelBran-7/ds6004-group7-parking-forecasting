@@ -4,6 +4,7 @@
 
 | 报告 | 内容 | 格式 |
 | --- | --- | --- |
+| 最终报告英文模型章节 | 特征、B0/B1/M0/M1、直接风险、校准、8张表与2张图；已与数据报告及Poster核对 | [说明与源稿](model_section/README.md) · [8 页可编辑 Word](model_section/DS6004_Group7_Model_Section_Report_EN.docx) |
 | 最新：RQ2 规则与预测增量 | 两轮门槛实验；距离收益、近满代价及同规则预测增量，失败结果保留 | [图文报告](rq2_gate/README.md) · [3 页 PDF](rq2_gate/rq2_gate.pdf) |
 | RQ 补充测评 | 完整后一年假日测试；原标准测试晚高峰、周末；保留有利与不利发现 | [图文报告](rq_supplement/README.md) · [4 页 PDF](rq_supplement/rq_supplement.pdf) |
 | 一年与两年对比 | 修正版数据的公平历史长度比较，以及完整两年 60/20/20 测评 | [图文报告](history_comparison/README.md) · [6 页 PDF](history_comparison/history_comparison.pdf) |

@@ -2,7 +2,9 @@
 
 围绕牛车水地铁站 A 出口 1 公里内的 8 个停车场，用 15 分钟快照预测未来 15／30 分钟的占用率与到达满位风险，再回放推荐策略、检验实际效果。A、B、C 三个模块已串成完整流程。
 
-**最新扩展：[RQ2 规则、余量与预测增量](reports/rq2_gate/README.md) · [下载 PDF](reports/rq2_gate/rq2_gate.pdf)**
+**最终报告模型部分：[英文源稿与合并说明](reports/model_section/README.md) · [下载可编辑 Word](reports/model_section/DS6004_Group7_Model_Section_Report_EN.docx)**
+
+最新实验扩展：[RQ2 规则、余量与预测增量](reports/rq2_gate/README.md) · [下载 PDF](reports/rq2_gate/rq2_gate.pdf)
 
 假日与时段补充：[RQ1 / RQ2 图文测评](reports/rq_supplement/README.md) · [4 页 PDF](reports/rq_supplement/rq_supplement.pdf)
 
